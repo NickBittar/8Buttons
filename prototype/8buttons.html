@@ -71,15 +71,41 @@
       box-shadow: none;
       transform: translateY(4px);
     }
+    .button.activated {
+      box-shadow: none;
+      transform: translateY(4px);
+    }
     #button-3 {
       background-color: var(--button-color);
     }
     #button-8 {
       background-color: indianred;
     }
+    .sheet {
+      background-color: black;
+      opacity: 0;
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      top: -100vh;
+      left: 0px;
+      transition: opacity 1s ease-out;
+      -webkit-transition: opacity 1s ease-out;
+    }
+    .visible {
+      opacity: 1;
+      top: 0px;
+    }
+    .bye-message {
+      font-size: 48px;
+      margin: 10% auto;
+      color: white;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease-out;
+      -webkit-transition: opacity 1s ease-out;
+    }
     </style>
-    <script>
-    </script>
   </head>
   <body>
     <div class="container">
@@ -97,5 +123,52 @@
         <div id="button-8" class="eight button">8</div>
       </div>
     </div>
+    <div id="sheet" class="sheet">
+      <div id="bye-message" class="bye-message">
+        Thanks :^)
+      </div>
+    </div>
   </body>
+  <script>
+var startTime;
+var buttonClickTimes = [];
+var buttonsPressed = 0;
+  window.onload = function() {
+    startTime = new Date();
+    console.info('Page loaded at ' + startTime);
+    addEventListeners();
+  }
+
+  function addEventListeners() {
+    let buttons = document.querySelectorAll('.button');
+    for(let i = 0; i < buttons.length; i++) {
+      console.log(buttons[i]);
+      buttons[i].addEventListener('click', buttonClick, false);
+    }
+  }
+
+  function buttonClick(event) {
+    buttonsPressed++;
+    let button = event.target;
+    let buttonNum = parseInt(button.id.split('-')[1]);
+    buttonClickTimes[buttonNum-1] = new Date();
+    button.removeEventListener('click', buttonClick);
+    button.className += ' activated';
+    console.info(event.target + ' clicked at ' + buttonClickTimes[buttonNum-1]);
+    if(buttonsPressed >= 8) {
+      console.log('bye');
+      closePage();
+    }
+  }
+
+  function closePage() {
+    // fade to black
+    let sheet = document.getElementById('sheet');
+    sheet.className += ' visible';
+    setTimeout(function() { document.getElementById('bye-message').style.opacity = 1;}, 2000);
+    // wait a sec or two
+    // white text fades in saying: Thanks :^)
+  }
+
+  </script>
 </html>
